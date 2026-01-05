@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Moodify</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root { --radius: 12px; }
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #fff;
+  padding: 30px 20px;
+  max-width: 1100px;
+  margin: auto;
+  color: #000;
+  transition: 0.3s;
+}
+
+body.dark {
+  background: #121212;
+  color: #fff;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ff4757;
+}
+
+.logo span {
+  margin-left: 6px;
+}
+
+/* Theme Toggle Icons */
+.theme-toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 26px;
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border: none;
+  transition: 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+/* Heading */
+h1 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* Input Box */
+textarea {
+  width: 100%;
+  height: 140px;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1.5px solid #444;
+  font-size: 16px;
+  outline: none;
+  background: #fafafa;
+  color: #000;
+  transition: 0.2s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+body.dark textarea {
+  background: #1e1e1e;
+  color: #fff;
+  border-color: #555;
+  box-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+
+/* Main Button */
+.main-btn {
+  display: block;
+  margin: 15px auto 20px;
+  background: #000;
+  color: white;
+  padding: 14px 26px;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+body.dark .main-btn {
+  background: #fff;
+  color: #000;
+}
+
+.main-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Result Text */
+#result {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 15px 0;
+  color: #ff4757;
+}
+
+body.dark #result {
+  color: #ffda79;
+}
+
+/* Songs Grid */
+#songs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+  padding-top: 10px;
+  justify-items: center;
+}
+
+.song {
+  background: #f2f2f2;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: 0.3s;
+  width: 100%;
+  max-width: 340px;
+}
+
+body.dark .song {
+  background: #1f1f1f;
+  border-color: #333;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.3);
+}
+
+.song img {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  object-fit: cover;
+  transition: 0.25s;
+}
+
+.song:hover img {
+  filter: drop-shadow(0 0 12px #ff4757);
+  transform: scale(1.06);
+}
+
+.title {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.preview-btn {
+  margin-top: 10px;
+  background: #2ed573;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.preview-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+/* Center middle footer text */
+.middle-footer {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+</style>
+</head>
+
+<body>
+
+<div class="logo">Moodify<span>🎵</span></div>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+<main>
+  <h1>Emotion Music Recommender</h1>
+  <textarea id="textInput" placeholder="Tell me how you're feeling today..."></textarea>
+  <button class="main-btn" onclick="detectEmotion()">Detect Emotion</button>
+
+  <div id="result"></div>
+  <div id="songs"></div>
+</main>
+
+<div class="middle-footer">Built by Aarya ❤️ | Emotion-based song suggestions</div>
+
+<script>
+async function detectEmotion() {
+  const text = document.getElementById("textInput").value.trim();
+  const resultDiv = document.getElementById("result");
+  const songsDiv = document.getElementById("songs");
+
+  resultDiv.innerText = "Analyzing mood...";
+  songsDiv.innerHTML = "";
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/detect/text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await res.json();
+    resultDiv.innerText = "Detected Emotion: " + data.emotion;
+
+    if (!data.songs || data.songs.length === 0) {
+      resultDiv.innerText = "No recommendations found.";
+      return;
+    }
+
+    data.songs.forEach(song => {
+      const thumbnail = `https://picsum.photos/seed/${encodeURIComponent(song.title)}/200`;
+      const ytLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(song.title + " song")}`;
+
+      songsDiv.innerHTML += `
+        <div class="song">
+          <img src="${thumbnail}" alt="song thumbnail"/>
+          <div class="title">${song.title}</div>
+          <a class="preview-btn" href="${ytLink}" target="_blank">▶ Preview Song</a>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    resultDiv.innerText = "Server not reachable";
+    console.error(err);
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  const icon = document.querySelector(".theme-toggle");
+  icon.innerText = document.body.classList.contains("dark") ? "☀️" : "🌙";
+}
+</script>
+
+</body>
+</html>
