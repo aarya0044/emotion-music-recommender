@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Moodify</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
-
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -13,16 +12,16 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background: #fff;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 30px 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
-  color: #000;
+  color: #333;
   transition: 0.3s;
 }
 
 body.dark {
-  background: #121212;
+  background: linear-gradient(135deg, #121212 0%, #2c2c2c 100%);
   color: #fff;
 }
 
@@ -61,148 +60,230 @@ body.dark {
 /* Heading */
 h1 {
   text-align: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+  color: #ff4757;
+}
+
+body.dark h1 {
+  color: #ffda79;
 }
 
 /* Input Box */
 textarea {
   width: 100%;
-  height: 140px;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1.5px solid #444;
-  font-size: 16px;
+  height: 160px;
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 2px solid #ddd;
+  font-size: 18px;
   outline: none;
-  background: #fafafa;
-  color: #000;
-  transition: 0.2s;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  background: #fff;
+  color: #333;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  resize: vertical;
 }
 
 body.dark textarea {
   background: #1e1e1e;
   color: #fff;
   border-color: #555;
-  box-shadow: 0 0 12px rgba(255,255,255,0.1);
+  box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+}
+
+textarea:focus {
+  border-color: #ff4757;
+  box-shadow: 0 0 20px rgba(255,71,87,0.3);
 }
 
 /* Main Button */
 .main-btn {
   display: block;
-  margin: 15px auto 20px;
-  background: #000;
+  margin: 20px auto 30px;
+  background: linear-gradient(45deg, #ff4757, #ff3742);
   color: white;
-  padding: 14px 26px;
+  padding: 16px 32px;
   border: none;
-  border-radius: 8px;
-  font-size: 17px;
+  border-radius: var(--radius);
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  transition: 0.3s;
+  box-shadow: 0 5px 20px rgba(255,71,87,0.4);
 }
 
 body.dark .main-btn {
-  background: #fff;
+  background: linear-gradient(45deg, #fff, #f0f0f0);
   color: #000;
 }
 
 .main-btn:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255,71,87,0.6);
 }
 
 /* Result Text */
 #result {
   text-align: center;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
-  margin: 15px 0;
+  margin: 20px 0;
   color: #ff4757;
+  white-space: pre-line;
+  animation: fadeIn 0.5s ease-in;
 }
 
 body.dark #result {
   color: #ffda79;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#result small {
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+}
+
+body.dark #result small {
+  color: #aaa;
+}
+
 /* Songs Grid */
 #songs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 18px;
-  padding-top: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  padding-top: 20px;
   justify-items: center;
+  max-height: 600px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ff4757 #f0f0f0;
+}
+
+body.dark #songs {
+  scrollbar-color: #ffda79 #2c2c2c;
 }
 
 .song {
-  background: #f2f2f2;
-  padding: 18px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
-  box-shadow: 3px 3px 12px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   transition: 0.3s;
   width: 100%;
-  max-width: 340px;
+  max-width: 360px;
+  position: relative;
 }
 
 body.dark .song {
   background: #1f1f1f;
   border-color: #333;
-  box-shadow: 3px 3px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.song:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .song img {
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   border-radius: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   object-fit: cover;
-  transition: 0.25s;
+  transition: 0.3s;
 }
 
 .song:hover img {
-  filter: drop-shadow(0 0 12px #ff4757);
-  transform: scale(1.06);
+  filter: brightness(1.1) drop-shadow(0 0 15px #ff4757);
+  transform: scale(1.05);
 }
 
 .title {
   font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 6px;
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-.preview-btn {
-  margin-top: 10px;
-  background: #2ed573;
-  padding: 10px 20px;
+body.dark .title {
+  color: #fff;
+}
+
+.song-details {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+body.dark .song-details {
+  color: #ccc;
+}
+
+.song-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preview-btn, .play-btn {
+  padding: 12px 20px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
-  color: #000;
   text-decoration: none;
-  transition: 0.2s;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.preview-btn {
+  background: #2ed573;
+  color: #000;
 }
 
 .preview-btn:hover {
-  opacity: 0.8;
+  background: #26a65b;
   transform: scale(1.05);
 }
 
-/* Center middle footer text */
+.play-btn {
+  background: #ff4757;
+  color: #fff;
+}
+
+.play-btn:hover {
+  background: #ff3742;
+  transform: scale(1.05);
+}
+
+/* Middle Footer */
 .middle-footer {
-  position: fixed;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  text-align: center;
+  margin-top: 40px;
   font-size: 15px;
   font-weight: 600;
   opacity: 0.85;
+  color: #666;
+}
+
+body.dark .middle-footer {
+  color: #ccc;
 }
 </style>
 </head>
@@ -241,22 +322,48 @@ async function detectEmotion() {
     });
 
     const data = await res.json();
-    resultDiv.innerText = "Detected Emotion: " + data.emotion;
+    resultDiv.innerHTML = "Detected Emotion: " + data.emotion + "<br><small>Confidence Score: " + data.score + "%</small>";
 
     if (!data.songs || data.songs.length === 0) {
-      resultDiv.innerText = "No recommendations found.";
+      resultDiv.innerText += "\nNo recommendations found.";
       return;
     }
 
+    console.log("Songs data:", data.songs);  // Debug: Check what the backend returns
+
     data.songs.forEach(song => {
-      const thumbnail = `https://picsum.photos/seed/${encodeURIComponent(song.title)}/200`;
-      const ytLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(song.title + " song")}`;
+      let title, artist, duration;
+
+      if (typeof song === 'object' && song !== null) {
+        // Backend returned objects
+        title = song.title || "Unknown Title";
+        artist = song.artist || "Unknown Artist";
+        duration = song.duration || "N/A";
+      } else if (typeof song === 'string') {
+        // Fallback for strings (old backend)
+        title = song;
+        artist = "Artist Name";  // Mock
+        duration = "3:45";  // Mock
+      } else {
+        // Unexpected format
+        title = "Unknown Title";
+        artist = "Unknown Artist";
+        duration = "N/A";
+      }
+
+      const thumbnail = `https://picsum.photos/seed/${encodeURIComponent(title)}/200`;
+      const ytLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(title + " " + artist)}`;
+      const spotifyLink = `https://open.spotify.com/search/${encodeURIComponent(title + " " + artist)}`;
 
       songsDiv.innerHTML += `
         <div class="song">
           <img src="${thumbnail}" alt="song thumbnail"/>
-          <div class="title">${song.title}</div>
-          <a class="preview-btn" href="${ytLink}" target="_blank">▶ Preview Song</a>
+          <div class="title">${title}</div>
+          <div class="song-details">by ${artist} • ${duration}</div>
+          <div class="song-buttons">
+            <a class="preview-btn" href="${ytLink}" target="_blank">Preview Song</a>
+            <a class="play-btn" href="${spotifyLink}" target="_blank">Play on Spotify</a>
+          </div>
         </div>
       `;
     });
