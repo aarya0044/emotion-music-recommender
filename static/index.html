@@ -311,19 +311,32 @@ async function detectEmotion() {
   const resultDiv = document.getElementById("result");
   const songsDiv = document.getElementById("songs");
 
+  if (!text) {
+    resultDiv.innerText = "Please enter some text to detect emotion.";
+    return;
+  }
+
   resultDiv.innerText = "Analyzing mood...";
   songsDiv.innerHTML = "";
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/detect/text", {
+    const res = await fetch("/detect/text", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text })
     });
 
-    const data = await res.json();
-    resultDiv.innerHTML = "Detected Emotion: " + data.emotion + "<br><small>Confidence Score: " + data.score + "%</small>";
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
 
+    const data = await res.json();
+    console.log(data);  // Debug: Check the response in browser console
+
+    // Update result
+    resultDiv.innerHTML = "Detected Emotion: " + (data.emotion || "Unknown") + "<br><small>Confidence Score: " + (data.score || "N/A") + "%</small>";
+
+    // Handle songs
     if (!data.songs || data.songs.length === 0) {
       resultDiv.innerText += "\nNo recommendations found.";
       return;
@@ -368,9 +381,10 @@ async function detectEmotion() {
       `;
     });
 
-  } catch (err) {
-    resultDiv.innerText = "Server not reachable";
-    console.error(err);
+  } catch (error) {
+    console.error('Error:', error);
+    resultDiv.innerText = "Server not reachable. Please try again.";
+    alert('Server not reached or an error occurred. Check console for details.');
   }
 }
 
@@ -380,6 +394,5 @@ function toggleTheme() {
   icon.innerText = document.body.classList.contains("dark") ? "☀️" : "🌙";
 }
 </script>
-
 </body>
 </html>
