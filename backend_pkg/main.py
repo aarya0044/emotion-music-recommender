@@ -9,6 +9,9 @@ from backend_pkg.models.face_emotion import detect_face_emotion
 from backend_pkg.models.text_emotion import detect_text_emotion
 from backend_pkg.recommender import recommend_music
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 app = FastAPI(title="Moodify API")
 
 # Add CORS middleware to allow frontend requests
@@ -19,6 +22,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount the static directory (this serves files at /static/...)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve index.html at the root path (/)
+@app.get("/")
+async def read_root():
+    return FileResponse("static/index.html")   
+
+
 
 class TextInput(BaseModel):
     text: str
