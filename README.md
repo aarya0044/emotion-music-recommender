@@ -1,4 +1,4 @@
-# Moodify 🎵  
+# Moodify 
 **Emotion-based Music Recommender**
 
 Moodify detects emotion from text using NLP and recommends songs with YouTube & Spotify links.
